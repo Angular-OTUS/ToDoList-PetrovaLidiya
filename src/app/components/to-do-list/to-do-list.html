@@ -1,0 +1,15 @@
+<div class="todolist-widget">
+    <h1>Список дел</h1>
+    <ul class="todolist-list">
+        @for (item of toDoList; track item.id) {
+            <li class="todolist-item">
+                <div class="title">{{ item.title }}</div>
+                <button class="btn btn-delete" (click)="delete(item.id)">Удалить</button>
+            </li>
+        }
+    </ul>
+    <div class="form-row">
+        <input class="input-text" type="text" [value]="taskText" (input)="onInput($event)">
+        <button class="btn btn-add" (click)="add()">Добавить</button>
+    </div>
+</div>
