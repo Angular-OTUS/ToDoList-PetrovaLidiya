@@ -22,55 +22,8 @@
     flex-direction: column;
     gap: 16px;
 }
-.todolist-item {
-    display: flex;
-    justify-content: space-between;
-    background-color: #e8e9eb;
-    border-radius: 8px;
-    padding: 16px;
-    .title {
-        font-size: 16px;
-        line-height: 24px;
-    }    
-}
 .form-row {
     display: flex;
     justify-content: space-between;
     gap: 24px;
-}
-.input-text {
-    font-size: 16px;
-    line-height: 24px;
-    outline: none;
-    border: 1px solid #e9eaec;
-    border-radius: 6px; 
-    padding: 8px 16px;
-    width: 100%;
-}
-.btn {
-    color: white; 
-    border: none; 
-    border-radius: 6px; 
-    transition: background-color 0.3s ease; 
-    text-align: center;
-    display: inline-block;
-    cursor: pointer;
-}
-.btn-delete {
-    background-color: #007bff;     
-    padding: 4px 12px;     
-    font-size: 12px; 
-    line-height: 18px;
-    &:hover {
-        background-color: #0056b3; 
-    }
-}
-.btn-add {
-    background-color: #38b46d; 
-    padding: 8px 16px; 
-    font-size: 16px;
-    line-height: 24px;
-    &:hover {
-        background-color: #24a058; 
-    }
 }

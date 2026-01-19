@@ -1,0 +1,11 @@
+.todolist-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #e8e9eb;
+    border-radius: 8px;
+    padding: 16px;
+    .title {
+        font-size: 16px;
+        line-height: 24px;
+    }    
+}
