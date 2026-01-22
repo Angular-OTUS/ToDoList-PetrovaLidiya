@@ -14,11 +14,13 @@
             class="input-text" 
             type="text" 
             [(ngModel)]="taskText"
-            (input)="onInput($event)">
-        <button 
+            (input)="onInput()"
+            (keyup.enter)="add()">
+        <button
+            type="button"
             class="button button--add" 
             (click)="add()"
-            [attr.disabled]="disabled ? disabled : null"
+            [attr.disabled]="disabled() ? disabled() : null"
         >Добавить</button>
     </div>
 </div>

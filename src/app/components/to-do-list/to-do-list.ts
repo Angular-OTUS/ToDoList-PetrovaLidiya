@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoListComponent {
 
@@ -20,7 +20,7 @@ export class ToDoListComponent {
 
   public taskText = '';
 
-  public disabled = true;
+  public disabled = signal<boolean>(true);
 
   private instanceCounter = 0;
 
@@ -61,17 +61,13 @@ export class ToDoListComponent {
       }
       this.toDoList.push(newItem);
       this.taskText = '';
-      this.disabled = true;
+      this.disabled.set(true);
     }
   }
 
-  public onInput(event: Event): void {
-    this.disabled = this.taskText === '' ? true : false;
+  public onInput(): void {
+    this.disabled.set(this.taskText === '' ? true : false);
   }
 
 }
 
-type ToDoListType = {
-  id: number;
-  title: string;
-}

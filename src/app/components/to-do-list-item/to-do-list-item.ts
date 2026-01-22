@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-to-do-list-item',
-  imports: [],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoListItemComponent {
-  @Input() public item: any;
-  @Output() public onDelete: EventEmitter<void> = new EventEmitter<void>();
+  public readonly item = input.required<ToDoListType>();
+  public onDelete = output<void>();
 }
