@@ -1,0 +1,6 @@
+<button
+    type="button"
+    class="button {{ cssClass() }}"
+    (click)="buttonClick.emit()"
+    [attr.disabled]="disabled() ? disabled() : null"
+>{{ title() }}</button>

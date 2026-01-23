@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../shared/button-component/button-component';
 
 @Component({
   selector: 'app-to-do-list',
@@ -9,18 +10,21 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     FormsModule,
     ToDoListItemComponent,
+    ButtonComponent,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToDoListComponent {
+export class ToDoListComponent implements OnInit{
 
   public toDoList: ToDoListType[];
 
   public taskText = '';
 
   public disabled = signal<boolean>(true);
+
+  public isLoading = signal<boolean>(true);
 
   private instanceCounter = 0;
 
@@ -45,7 +49,13 @@ export class ToDoListComponent {
     ];
   }
 
-  public delete(id: number): void {
+  public ngOnInit(): void {
+    setTimeout(() => {
+      this.isLoading.set(false);
+    }, 500);
+  }
+
+  public onDelete(id: number): void {
     const indexToRemove = this.toDoList.findIndex(i => i.id === id);
     if (indexToRemove !== -1) {
       this.toDoList.splice(indexToRemove, 1);
@@ -53,7 +63,7 @@ export class ToDoListComponent {
     this.toDoList = this.toDoList.slice();
   }
 
-  public add(): void {
+  public onAdd(): void {
     if (this.taskText !== '') {
       const newItem = {
         id: this.instanceCounter++,

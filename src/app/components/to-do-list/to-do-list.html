@@ -1,26 +1,32 @@
-<div class="todolist-widget">
-    <h1>Список дел</h1>
-    <ul class="todolist-list">
-        @for (item of toDoList; track item.id) {
-            <app-to-do-list-item
-                [item]="item"
-                (onDelete)="delete(item.id)"
-            ></app-to-do-list-item>
-        }
-    </ul>
-    <div class="form-row">
-        <input 
-            matInput 
-            class="input-text" 
-            type="text" 
-            [(ngModel)]="taskText"
-            (input)="onInput()"
-            (keyup.enter)="add()">
-        <button
-            type="button"
-            class="button button--add" 
-            (click)="add()"
-            [attr.disabled]="disabled() ? disabled() : null"
-        >Добавить</button>
+@if (isLoading()){
+    <div class="loader-container"> 
+        <div class="loader"></div>
     </div>
-</div>
+} @else {
+    <div class="todolist-widget">
+        <h1>Список дел</h1>
+        <ul class="todolist-list">
+            @for (item of toDoList; track item.id) {
+                <app-to-do-list-item
+                    [item]="item"
+                    (delete)="onDelete(item.id)"
+                ></app-to-do-list-item>
+            }
+        </ul>
+        <div class="form-row">
+            <input 
+                matInput 
+                class="input-text" 
+                type="text" 
+                [(ngModel)]="taskText"
+                (input)="onInput()"
+                (keyup.enter)="onAdd()">
+            <app-button-component
+                [title]="'Добавить'"
+                [cssClass]="'button--add'"
+                [disabled]="disabled()"
+                (buttonClick)="onAdd()"
+            ></app-button-component>
+        </div>
+    </div>
+}
