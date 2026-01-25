@@ -1,0 +1,32 @@
+.button {
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    transition: background-color 0.3s ease; 
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+}
+.button--delete {
+    background-color: #e05353;     
+    padding: 4px 12px;     
+    font-size: 12px; 
+    line-height: 18px;
+    &:hover {
+        background-color: #ca4949; 
+    }
+}
+.button--add {
+    background-color: #38b46d; 
+    padding: 8px 16px; 
+    font-size: 16px;
+    line-height: 24px;
+    &:hover {
+        background-color: #24a058; 
+    }
+    &:disabled {
+        opacity: 0.5; 
+        cursor: not-allowed; 
+        pointer-events: none;
+    }
+}
