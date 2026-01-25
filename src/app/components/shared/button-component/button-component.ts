@@ -10,5 +10,5 @@ export class ButtonComponent {
   public readonly title = input.required<string>();
   public readonly disabled = input<boolean | null>(null);
   public readonly cssClass = input<string>();
-  public buttonClick = output<void>();
+  public readonly buttonClick = output<void>();
 }

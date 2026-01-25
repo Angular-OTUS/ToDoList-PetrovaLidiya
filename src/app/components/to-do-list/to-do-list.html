@@ -9,7 +9,7 @@
             @for (item of toDoList; track item.id) {
                 <app-to-do-list-item
                     [item]="item"
-                    (delete)="onDelete(item.id)"
+                    (delete)="delete(item.id)"
                 ></app-to-do-list-item>
             }
         </ul>
@@ -20,12 +20,12 @@
                 type="text" 
                 [(ngModel)]="taskText"
                 (input)="onInput()"
-                (keyup.enter)="onAdd()">
+                (keyup.enter)="add()">
             <app-button-component
                 [title]="'Добавить'"
                 [cssClass]="'button--add'"
                 [disabled]="disabled()"
-                (buttonClick)="onAdd()"
+                (buttonClick)="add()"
             ></app-button-component>
         </div>
     </div>

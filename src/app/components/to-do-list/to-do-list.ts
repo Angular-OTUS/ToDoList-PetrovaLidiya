@@ -55,7 +55,7 @@ export class ToDoListComponent implements OnInit{
     }, 500);
   }
 
-  public onDelete(id: number): void {
+  public delete(id: number): void {
     const indexToRemove = this.toDoList.findIndex(i => i.id === id);
     if (indexToRemove !== -1) {
       this.toDoList.splice(indexToRemove, 1);
@@ -63,7 +63,7 @@ export class ToDoListComponent implements OnInit{
     this.toDoList = this.toDoList.slice();
   }
 
-  public onAdd(): void {
+  public add(): void {
     if (this.taskText !== '') {
       const newItem = {
         id: this.instanceCounter++,
@@ -76,7 +76,7 @@ export class ToDoListComponent implements OnInit{
   }
 
   public onInput(): void {
-    this.disabled.set(this.taskText === '' ? true : false);
+    this.disabled.set(this.taskText === '') 
   }
 
 }

@@ -12,5 +12,5 @@ import { ButtonComponent } from '../shared/button-component/button-component';
 })
 export class ToDoListItemComponent {
   public readonly item = input.required<ToDoListType>();
-  public delete = output<void>();
+  public readonly delete = output<void>();
 }
