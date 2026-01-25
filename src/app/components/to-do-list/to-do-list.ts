@@ -1,17 +1,26 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-to-do-list',
-  imports: [],
+  imports: [
+    MatInputModule,
+    FormsModule,
+    ToDoListItemComponent,
+  ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoListComponent {
 
   public toDoList: ToDoListType[];
 
   public taskText = '';
+
+  public disabled = signal<boolean>(true);
 
   private instanceCounter = 0;
 
@@ -52,16 +61,13 @@ export class ToDoListComponent {
       }
       this.toDoList.push(newItem);
       this.taskText = '';
+      this.disabled.set(true);
     }
   }
 
-  public onInput(event: Event): void {
-    this.taskText = (event.target as HTMLInputElement).value;
+  public onInput(): void {
+    this.disabled.set(this.taskText === '' ? true : false);
   }
 
 }
 
-type ToDoListType = {
-  id: number;
-  title: string;
-}
