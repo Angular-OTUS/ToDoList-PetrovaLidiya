@@ -1,5 +1,16 @@
- <li class="todolist-item">
-    <div class="title">{{ item().title }}</div>
+<li 
+    class="todolist-item"
+    [ngClass]="{selected: item().id === selectedId()}"
+>
+    <div
+        class="title"
+        role="button"
+        tabindex="0"
+        (click)="itemClick(item().id)"
+        (keydown)="itemClick(item().id)"
+    >
+        {{ item().title }}
+    </div>
     <app-button-component
         [title]="'Удалить'"
         [cssClass]="'button--delete'"

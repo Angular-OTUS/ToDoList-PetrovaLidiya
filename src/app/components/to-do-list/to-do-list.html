@@ -3,30 +3,47 @@
         <div class="loader"></div>
     </div>
 } @else {
-    <div class="todolist-widget">
-        <h1>Список дел</h1>
-        <ul class="todolist-list">
-            @for (item of toDoList; track item.id) {
-                <app-to-do-list-item
-                    [item]="item"
-                    (delete)="delete(item.id)"
-                ></app-to-do-list-item>
-            }
-        </ul>
-        <div class="form-row">
-            <input 
-                matInput 
-                class="input-text" 
-                type="text" 
-                [(ngModel)]="taskText"
-                (input)="onInput()"
-                (keyup.enter)="add()">
-            <app-button-component
-                [title]="'Добавить'"
-                [cssClass]="'button--add'"
-                [disabled]="disabled()"
-                (buttonClick)="add()"
-            ></app-button-component>
+    <div class="d-flex gap-24">
+        <div class="todolist-widget">
+            <h1>Список дел</h1>
+            <ul class="todolist-list">
+                @for (item of toDoList; track item.id) {
+                    <app-to-do-list-item
+                        [item]="item"
+                        [(selectedId)]="selectedItemId"
+                        (delete)="delete(item.id)"
+                    ></app-to-do-list-item>
+                }
+            </ul>
+            <div>
+                <div class="form-row m-b-16">
+                    <input 
+                        matInput 
+                        class="input-text" 
+                        type="text"
+                        placeholder="Введите название задачи"
+                        [(ngModel)]="taskTitle"
+                        (input)="onInput()"
+                        (keyup.enter)="add()">
+                    <app-button-component
+                        [title]="'Добавить'"
+                        [cssClass]="'button--add'"
+                        [disabled]="disabled()"
+                        (buttonClick)="add()"
+                    ></app-button-component>
+                </div>
+                <div class="form-row">
+                    <textarea
+                        matInput 
+                        class="input-text" 
+                        placeholder="Введите описание задачи"
+                        [(ngModel)]="taskDescr"
+                    ></textarea>
+                </div>
+            </div>
         </div>
+        @if (selectedItemId !== null) {
+            <div class="todolist-descr">{{ selectedItemDescr }}</div>
+        }
     </div>
 }
