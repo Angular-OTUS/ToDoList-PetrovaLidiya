@@ -76,7 +76,7 @@ export class ToDoListComponent implements OnInit{
   }
 
   public onInput(): void {
-    this.disabled.set(this.taskText === '') 
+    this.disabled.set(this.taskText === '');
   }
 
 }
