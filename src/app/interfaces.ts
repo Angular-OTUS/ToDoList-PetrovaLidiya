@@ -3,3 +3,7 @@ export interface ToDoListType {
   title: string;
   description?: string;
 }
+
+type NButtonType = 'accent' | 'basic' | 'danger';
+
+type NButtonSize = 'small' | 'default';
