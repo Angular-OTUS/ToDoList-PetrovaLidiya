@@ -2,7 +2,8 @@
     <div class="title">{{ item().title }}</div>
     <app-button-component
         [title]="'Удалить'"
-        [cssClass]="'button--delete'"
+        [type]="'danger'"
+        [size]="'small'"
         (buttonClick)="delete.emit()"
     ></app-button-component>
 </li>

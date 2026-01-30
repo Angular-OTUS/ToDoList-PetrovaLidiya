@@ -9,6 +9,7 @@ import { Component, input, output } from '@angular/core';
 export class ButtonComponent {
   public readonly title = input.required<string>();
   public readonly disabled = input<boolean | null>(null);
-  public readonly cssClass = input<string>();
+  public readonly type = input<NButtonType>('accent');
+  public readonly size = input<NButtonSize>('default');
   public readonly buttonClick = output<void>();
 }
