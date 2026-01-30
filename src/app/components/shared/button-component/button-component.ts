@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { NButtonSize, NButtonType } from '../../../interfaces';
 
 @Component({
   selector: 'app-button-component',

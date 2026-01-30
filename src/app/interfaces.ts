@@ -4,6 +4,6 @@ export interface ToDoListType {
   description?: string;
 }
 
-type NButtonType = 'accent' | 'basic' | 'danger';
+export type NButtonType = 'accent' | 'basic' | 'danger';
 
-type NButtonSize = 'small' | 'default';
+export type NButtonSize = 'small' | 'default';
