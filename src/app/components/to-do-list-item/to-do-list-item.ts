@@ -1,13 +1,15 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { NgClass } from "@angular/common";
 import { ButtonComponent } from '../shared/button-component/button-component';
 import { ToDoListType } from '../../interfaces';
+import { TooltipDirective } from '../../directives/tooltip';
 
 @Component({
   selector: 'app-to-do-list-item',
   imports: [
     ButtonComponent,
     NgClass,
+    TooltipDirective,
 ],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.scss',

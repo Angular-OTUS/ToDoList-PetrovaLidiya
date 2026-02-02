@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../shared/button-component/button-component';
 import { ToDoListType } from '../../interfaces';
+import { TooltipDirective } from '../../directives/tooltip';
 
 @Component({
   selector: 'app-to-do-list',
@@ -12,6 +13,7 @@ import { ToDoListType } from '../../interfaces';
     FormsModule,
     ToDoListItemComponent,
     ButtonComponent,
+    TooltipDirective,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',

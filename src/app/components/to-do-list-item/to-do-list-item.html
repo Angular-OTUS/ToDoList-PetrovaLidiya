@@ -8,6 +8,7 @@
         tabindex="0"
         (click)="itemClick(item().id)"
         (keydown)="itemClick(item().id)"
+        appTooltip="Показать описание задачи"
     >
         {{ item().title }}
     </div>
@@ -16,5 +17,6 @@
         [type]="'danger'"
         [size]="'small'"
         (buttonClick)="delete.emit()"
+        appTooltip="Удалить задачу из списка"
     ></app-button-component>
 </li>
