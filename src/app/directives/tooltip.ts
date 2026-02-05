@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, inject, input, OnDestroy, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[appTooltip]',
@@ -9,13 +9,17 @@ import { Directive, ElementRef, inject, input, Renderer2 } from '@angular/core';
     '(blur)': 'hide()',
   },
 })
-export class TooltipDirective {
+export class TooltipDirective implements OnDestroy{
   private readonly el = inject(ElementRef);
   private readonly renderer = inject(Renderer2);
 
   readonly appTooltip = input<string>("");
 
   private tooltipElement: HTMLElement | null = null;
+
+  ngOnDestroy() {
+    this.hide();
+  }
 
   show() {
     if (!this.appTooltip() || this.tooltipElement) return;

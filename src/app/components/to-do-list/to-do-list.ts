@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -21,27 +21,9 @@ import { TooltipDirective } from '../../directives/tooltip';
 })
 export class ToDoListComponent implements OnInit{
 
-  public toDoList: ToDoListType[];
-
-  public taskTitle = '';
-
-  public taskDescr = '';
-
-  public disabled = signal<boolean>(true);
-
-  public isLoading = signal<boolean>(true);
-
-  public selectedItemId: number | null;
-
-  public get selectedItemDescr(): string | undefined{
-    return this.toDoList.find(x => x.id === this.selectedItemId)?.description;
-  }
-
-  private instanceCounter = 0;
-
-  constructor() {
-    this.selectedItemId = null;
-    this.toDoList = [
+  public instanceCounter = 0;
+  
+  public toDoList = [
       {
         id: this.instanceCounter++,
         title: 'Приготовить обед',
@@ -63,7 +45,18 @@ export class ToDoListComponent implements OnInit{
         description: 'Для экономного и эффективного похода в магазин за продуктами составьте список покупок, спланируйте меню, идите на сытый желудок и заглядывайте на верхние полки, избегая импульсивных трат.',
       },
     ];
-  }
+
+  public taskTitle = '';
+
+  public taskDescr = '';
+
+  public disabled = signal<boolean>(true);
+
+  public isLoading = signal<boolean>(true);
+
+  public selectedItemId = signal<number | null>(null);
+
+  public selectedItemDescr = computed(() => this.toDoList.find(x => x.id === this.selectedItemId())?.description);
 
   public ngOnInit(): void {
     setTimeout(() => {
@@ -75,6 +68,7 @@ export class ToDoListComponent implements OnInit{
     const indexToRemove = this.toDoList.findIndex(i => i.id === id);
     if (indexToRemove !== -1) {
       this.toDoList.splice(indexToRemove, 1);
+      this.selectedItemId.set(null);
     }
     this.toDoList = this.toDoList.slice();
   }
@@ -95,6 +89,10 @@ export class ToDoListComponent implements OnInit{
 
   public onInput(): void {
     this.disabled.set(this.taskTitle === '');
+  }
+
+  public selectItem(e: number): void {
+    this.selectedItemId.set(e);
   }
 
 }
