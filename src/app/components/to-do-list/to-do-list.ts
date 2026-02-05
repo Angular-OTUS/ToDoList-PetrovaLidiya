@@ -23,7 +23,7 @@ export class ToDoListComponent implements OnInit{
 
   public instanceCounter = 0;
   
-  public toDoList = [
+  public toDoList = signal<ToDoListType[]>([
       {
         id: this.instanceCounter++,
         title: 'Приготовить обед',
@@ -44,7 +44,7 @@ export class ToDoListComponent implements OnInit{
         title: 'Сходить в магазин за продуктами',
         description: 'Для экономного и эффективного похода в магазин за продуктами составьте список покупок, спланируйте меню, идите на сытый желудок и заглядывайте на верхние полки, избегая импульсивных трат.',
       },
-    ];
+    ]);
 
   public taskTitle = '';
 
@@ -56,7 +56,7 @@ export class ToDoListComponent implements OnInit{
 
   public selectedItemId = signal<number | null>(null);
 
-  public selectedItemDescr = computed(() => this.toDoList.find(x => x.id === this.selectedItemId())?.description);
+  public selectedItemDescr = computed(() => this.toDoList().find(x => x.id === this.selectedItemId())?.description);
 
   public ngOnInit(): void {
     setTimeout(() => {
@@ -65,12 +65,12 @@ export class ToDoListComponent implements OnInit{
   }
 
   public delete(id: number): void {
-    const indexToRemove = this.toDoList.findIndex(i => i.id === id);
+    const indexToRemove = this.toDoList().findIndex(i => i.id === id);
     if (indexToRemove !== -1) {
-      this.toDoList.splice(indexToRemove, 1);
+      this.toDoList().splice(indexToRemove, 1);
       this.selectedItemId.set(null);
     }
-    this.toDoList = this.toDoList.slice();
+    this.toDoList.set(this.toDoList().slice());
   }
 
   public add(): void {
@@ -80,7 +80,7 @@ export class ToDoListComponent implements OnInit{
         title: this.taskTitle,
         description: this.taskDescr,
       }
-      this.toDoList.push(newItem);
+      this.toDoList().push(newItem);
       this.taskTitle = '';
       this.taskDescr = '';
       this.disabled.set(true);

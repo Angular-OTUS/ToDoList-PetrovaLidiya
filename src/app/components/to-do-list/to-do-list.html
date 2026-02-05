@@ -6,16 +6,20 @@
     <div class="d-flex gap-24">
         <div class="todolist-widget">
             <h1>Список дел</h1>
-            <ul class="todolist-list">
-                @for (item of toDoList; track item.id) {
-                    <app-to-do-list-item
-                        [item]="item"
-                        [selectedId]="selectedItemId()"
-                        (delete)="delete(item.id)"
-                        (selectItem)="selectItem($event)"
-                    ></app-to-do-list-item>
-                }
-            </ul>
+            @if (toDoList().length) {
+                <ul class="todolist-list">
+                    @for (item of toDoList(); track item.id) {
+                        <app-to-do-list-item
+                            [item]="item"
+                            [selectedId]="selectedItemId()"
+                            (delete)="delete(item.id)"
+                            (selectItem)="selectItem($event)"
+                        ></app-to-do-list-item>
+                    }
+                </ul>
+            } @else {
+                <p><i>Список пуст</i></p>
+            }
             <div>
                 <div class="form-row m-b-16">
                     <input 
