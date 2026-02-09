@@ -7,3 +7,9 @@ export interface ToDoListType {
 export type NButtonType = 'accent' | 'basic' | 'danger';
 
 export type NButtonSize = 'small' | 'default';
+
+export interface Toast {
+  id: number;
+  message: string;
+  type: 'success' | 'error' | 'info';
+}

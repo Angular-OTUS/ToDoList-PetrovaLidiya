@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal,Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../shared/button-component/button-component';
-import { ToDoListType } from '../../interfaces';
 import { TooltipDirective } from '../../directives/tooltip';
 import { ToDoListService } from '../../services/ToDoListService.service';
+import { ToastService } from '../../services/ToastService.service';
 
 @Component({
   selector: 'app-to-do-list',
@@ -37,6 +37,8 @@ export class ToDoListComponent implements OnInit{
   public selectedItemDescr = computed(() => this.toDoList().find(x => x.id === this.selectedItemId())?.description);
 
   private _toDoListService = inject(ToDoListService);
+
+  private _toastService = inject(ToastService);
   
   public ngOnInit(): void {
     setTimeout(() => {
@@ -46,12 +48,14 @@ export class ToDoListComponent implements OnInit{
 
   public delete(id: number): void {
     this._toDoListService.delete(id);
+    this._toastService.show('Задача удалена', 'success');
     this.selectedItemId.set(null);
   }
 
   public add(): void {
     if (this.taskTitle !== '') {
       this._toDoListService.add(this.taskTitle, this.taskDescr);
+      this._toastService.show('Задача добавлена', 'success');
       this.taskTitle = '';
       this.taskDescr = '';
       this.disabled.set(true);
@@ -60,6 +64,7 @@ export class ToDoListComponent implements OnInit{
 
   public updateItem(id: number, title: string) {
     this._toDoListService.update(id, {title: title});
+    this._toastService.show('Задача обнавлена', 'success');
   }
 
   public onInput(): void {
