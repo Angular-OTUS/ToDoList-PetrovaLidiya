@@ -14,6 +14,7 @@
                             [selectedId]="selectedItemId()"
                             (delete)="delete(item.id)"
                             (selectItem)="selectItem($event)"
+                            (save)="updateItem(item.id, $event)"
                         ></app-to-do-list-item>
                     }
                 </ul>
