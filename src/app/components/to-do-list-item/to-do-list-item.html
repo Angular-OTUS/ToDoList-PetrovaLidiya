@@ -1,9 +1,24 @@
- <li class="todolist-item">
-    <div class="title">{{ item().title }}</div>
-    <app-button-component
-        [title]="'Удалить'"
-        [type]="'danger'"
-        [size]="'small'"
-        (buttonClick)="delete.emit()"
-    ></app-button-component>
+<li 
+    class="todolist-item"
+    [class.selected]="item().id === selectedId()"
+>
+    <div
+        class="title"
+        role="button"
+        tabindex="0"
+        (click)="selectItem.emit(item().id)"
+        (keydown.enter)="selectItem.emit(item().id)"
+        appTooltip="Показать описание задачи"
+    >
+        {{ item().title }}
+    </div>
+    <div class="p-16">
+        <app-button-component
+            [title]="'Удалить'"
+            [type]="'danger'"
+            [size]="'small'"
+            (buttonClick)="delete.emit()"
+            appTooltip="Удалить задачу из списка"
+        ></app-button-component>
+    </div>
 </li>
