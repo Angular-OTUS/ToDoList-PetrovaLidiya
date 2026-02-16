@@ -28,6 +28,9 @@ export class ToDoListItemComponent {
   public isEditing = signal<boolean>(false);
 
   public saveNewTitle(): void {
+    this.editingTitle = this.editingTitle.trim();
+    if (!this.editingTitle)
+      return;
     this.save.emit(this.editingTitle);
     this.isEditing.set(false);
   }

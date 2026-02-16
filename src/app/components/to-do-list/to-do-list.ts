@@ -54,11 +54,13 @@ export class ToDoListComponent implements OnInit{
 
   public add(): void {
     if (this.taskTitle !== '') {
-      this._toDoListService.add(this.taskTitle, this.taskDescr);
-      this._toastService.show('Задача добавлена', 'success');
-      this.taskTitle = '';
-      this.taskDescr = '';
-      this.disabled.set(true);
+      const added = this._toDoListService.add(this.taskTitle, this.taskDescr);
+      if (added) {
+        this._toastService.show('Задача добавлена', 'success');
+        this.taskTitle = '';
+        this.taskDescr = '';
+        this.disabled.set(true);
+      }
     }
   }
 

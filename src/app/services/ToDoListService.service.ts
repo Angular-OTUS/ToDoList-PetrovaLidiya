@@ -33,17 +33,18 @@ export class ToDoListService {
         return this._toDoList.asReadonly();
     }
 
-    public add(title: string, description?: string): void {
+    public add(title: string, description?: string): boolean {
         const trimmed = title?.trim();
         if (!trimmed) 
-            throw new Error('Title is required');
+          return false;
         const current = this._toDoList();
         const newTodo: ToDoListType = {
             id: this._generateId(current),
             title: trimmed,
-            description: description,
+            description: description?.trim(),
         };
         this._toDoList.set([...current, newTodo]);
+        return true;
     }
 
     public delete(id: number): boolean {
@@ -59,6 +60,8 @@ export class ToDoListService {
     public update(id: number, updates: Partial<ToDoListType>): void {
         const current = this._toDoList();
         const idx = current.findIndex(t => t.id === id);
+        if (idx === -1) return;
+
         const updated = { ...current[idx], ...updates};
         const nextList = [...current];
         nextList[idx] = updated;
