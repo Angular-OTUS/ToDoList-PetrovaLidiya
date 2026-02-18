@@ -6,4 +6,6 @@
     "
     (click)="buttonClick.emit()"
     [disabled]="disabled()"
->{{ title() }}</button>
+>
+  <ng-content></ng-content>
+</button>
