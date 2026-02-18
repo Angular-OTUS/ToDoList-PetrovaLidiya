@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../shared/button-component/button-component';
-import { ToDoListType } from '../../interfaces';
 import { TooltipDirective } from '../../directives/tooltip';
+import { ToDoListService } from '../../services/ToDoListService.service';
+import { ToastService } from '../../services/ToastService.service';
 
 @Component({
   selector: 'app-to-do-list',
@@ -21,30 +22,7 @@ import { TooltipDirective } from '../../directives/tooltip';
 })
 export class ToDoListComponent implements OnInit{
 
-  public instanceCounter = 0;
-  
-  public toDoList = signal<ToDoListType[]>([
-      {
-        id: this.instanceCounter++,
-        title: 'Приготовить обед',
-        description: 'Сытное и вкусное блюдо "с изюминкой", которое можно приготовить всего из 3 ингредиентов, - аппетитные, нежные и румяные яичные конвертики',
-      },
-      {
-        id: this.instanceCounter++,
-        title: 'Помыть окна',
-        description: 'В процессе оказания услуги происходит очистка москитных сеток, карнизов, жалюзи, удаление грязи между рам, а также полировка стекол специальными средствами.',
-      },
-      {
-        id: this.instanceCounter++,
-        title: 'Пропылесосить в квартире',
-        description: 'Если в доме нет моющего пылесоса, а тяжелые покрывала не помещаются в стиральную машинку, имеет смысл обратиться за услугами профессионалов. ',
-      },
-      {
-        id: this.instanceCounter++,
-        title: 'Сходить в магазин за продуктами',
-        description: 'Для экономного и эффективного похода в магазин за продуктами составьте список покупок, спланируйте меню, идите на сытый желудок и заглядывайте на верхние полки, избегая импульсивных трат.',
-      },
-    ]);
+  public toDoList = computed(() => this._toDoListService.toDoList());
 
   public taskTitle = '';
 
@@ -58,6 +36,10 @@ export class ToDoListComponent implements OnInit{
 
   public selectedItemDescr = computed(() => this.toDoList().find(x => x.id === this.selectedItemId())?.description);
 
+  private _toDoListService = inject(ToDoListService);
+
+  private _toastService = inject(ToastService);
+  
   public ngOnInit(): void {
     setTimeout(() => {
       this.isLoading.set(false);
@@ -65,26 +47,26 @@ export class ToDoListComponent implements OnInit{
   }
 
   public delete(id: number): void {
-    const indexToRemove = this.toDoList().findIndex(i => i.id === id);
-    if (indexToRemove !== -1) {
-      this.toDoList().splice(indexToRemove, 1);
-      this.selectedItemId.set(null);
-    }
-    this.toDoList.set(this.toDoList().slice());
+    this._toDoListService.delete(id);
+    this._toastService.show('Задача удалена', 'success');
+    this.selectedItemId.set(null);
   }
 
   public add(): void {
     if (this.taskTitle !== '') {
-      const newItem = {
-        id: this.instanceCounter++,
-        title: this.taskTitle,
-        description: this.taskDescr,
+      const added = this._toDoListService.add(this.taskTitle, this.taskDescr);
+      if (added) {
+        this._toastService.show('Задача добавлена', 'success');
+        this.taskTitle = '';
+        this.taskDescr = '';
+        this.disabled.set(true);
       }
-      this.toDoList().push(newItem);
-      this.taskTitle = '';
-      this.taskDescr = '';
-      this.disabled.set(true);
     }
+  }
+
+  public updateItem(id: number, title: string) {
+    this._toDoListService.update(id, {title: title});
+    this._toastService.show('Задача обнавлена', 'success');
   }
 
   public onInput(): void {
