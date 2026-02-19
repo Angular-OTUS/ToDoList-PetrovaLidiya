@@ -4,7 +4,7 @@
     <div class="d-flex gap-24">
         <div class="todolist-widget">
             <h1>Список дел</h1>
-            @if (toDoList().length) {
+            @if (toDoList.length) {
                 <div class="filter">
                     <mat-form-field>
                         <mat-label>Фильтр по статусу задачи</mat-label>
@@ -16,7 +16,7 @@
                     </mat-form-field>
                 </div>
                 <ul class="todolist-list">
-                    @for (item of toDoList(); track item.id) {
+                    @for (item of toDoList; track item.id) {
                         @if (item.status === selectedStatusFilter() || !selectedStatusFilter()){
                             <app-to-do-list-item
                                 [item]="item"
@@ -32,7 +32,9 @@
             } @else {
                 <p><i>Список пуст</i></p>
             }
-            <app-to-do-create-item></app-to-do-create-item>
+            <app-to-do-create-item
+                (addedSuccess)="addedItem($event)"
+            ></app-to-do-create-item>
         </div>
         @if (selectedItemId() !== null) {
             <div class="todolist-descr">
