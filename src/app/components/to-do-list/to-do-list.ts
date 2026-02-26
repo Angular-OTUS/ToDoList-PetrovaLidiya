@@ -9,6 +9,8 @@ import { ToDoListType } from '../../interfaces';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-to-do-list',
@@ -19,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     ToDoCreateItemComponent,
     MatFormFieldModule, 
     MatSelectModule,
+    RouterOutlet,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
@@ -30,9 +33,7 @@ export class ToDoListComponent implements OnInit{
 
   public isLoading = signal<boolean>(true);
 
-  public selectedItemId = signal<number | null>(null);
-
-  public selectedItemDescr = computed(() => this.toDoList.find(x => x.id === this.selectedItemId())?.description);
+  public selectedItemId = signal<string | null>(null);
 
   public selectedStatusFilter = signal<'InProgress' | 'Completed' | null>(null);
 
@@ -43,6 +44,10 @@ export class ToDoListComponent implements OnInit{
   private _destroyRef = inject(DestroyRef);
 
   private _cdr = inject(ChangeDetectorRef);
+
+  private readonly _ar = inject(ActivatedRoute);
+
+  private readonly _router = inject(Router);
   
   public ngOnInit(): void {
     this._toDoListService.getAll().subscribe(x => {
@@ -51,7 +56,7 @@ export class ToDoListComponent implements OnInit{
     });
   }
 
-  public delete(id: number): void {
+  public delete(id: string): void {
     if (!id) return;
 
     this._toDoListService.delete(id)
@@ -64,7 +69,7 @@ export class ToDoListComponent implements OnInit{
       });
   }
 
-  public updateItem(id: number, title: string): void {
+  public updateItem(id: string, title: string): void {
     this._toDoListService.update(id, {title: title})
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(x => {
@@ -77,7 +82,10 @@ export class ToDoListComponent implements OnInit{
       });
   }
 
-  public selectItem(e: number): void {
+  public selectItem(e: string): void {
+    this._router.navigate(
+      [ `tasks/${ e }` ],
+    );
     this.selectedItemId.set(e);
   }
 

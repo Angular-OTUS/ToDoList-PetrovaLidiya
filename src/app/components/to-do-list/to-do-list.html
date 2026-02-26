@@ -1,7 +1,7 @@
 @if (isLoading()){
     <app-loading-spinner></app-loading-spinner>
 } @else {
-    <div class="d-flex gap-24">
+    <div class="todolist-container d-flex gap-24 w-100">
         <div class="todolist-widget">
             <h1>Список дел</h1>
             @if (toDoList.length) {
@@ -36,14 +36,6 @@
                 (addedSuccess)="addedItem($event)"
             ></app-to-do-create-item>
         </div>
-        @if (selectedItemId() !== null) {
-            <div class="todolist-descr">
-                @if (selectedItemDescr()) {
-                 {{ selectedItemDescr() }}
-                } @else {
-                    <i>Описание не указано</i>
-                }
-            </div>
-        }
+        <router-outlet></router-outlet>
     </div>
 }

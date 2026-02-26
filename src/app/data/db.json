@@ -16,7 +16,7 @@
       "id": "3",
       "title": "Сходить в магазин за продуктами",
       "description": "Для экономного и эффективного похода в магазин за продуктами составьте список покупок, спланируйте меню, идите на сытый желудок и заглядывайте на верхние полки, избегая импульсивных трат.",
-      "status": "InProgress"
+      "status": "Completed"
     },
     {
       "id": "07dc",
@@ -34,6 +34,12 @@
       "id": "cebe",
       "title": "hk,h ,mghgfhyjr tyj rtyuj",
       "description": "hjuk tykuit yukit",
+      "status": "InProgress"
+    },
+    {
+      "id": "6f9f",
+      "title": "gh ert ertye",
+      "description": "fgh rtg wretg",
       "status": "InProgress"
     }
   ]

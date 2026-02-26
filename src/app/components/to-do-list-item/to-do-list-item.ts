@@ -21,8 +21,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class ToDoListItemComponent {
   public readonly item = input.required<ToDoListType>();
-  public selectedId = input<number | null>();
-  public readonly selectItem = output<number>();
+  public selectedId = input<string | null>();
+  public readonly selectItem = output<string>();
   public readonly delete = output<void>();
   public readonly save = output<string>();
   public readonly changeStatus = output<boolean>();
