@@ -15,7 +15,7 @@
             appTooltip="Добавить задачу в список"
             [type]="'accent'"
             [disabled]="taskForm.invalid"
-            (buttonClick)="onSubmit(taskForm)"
+            [submit]="true"
         >Добавить</app-button-component>
     </div>
     <div class="form-row">

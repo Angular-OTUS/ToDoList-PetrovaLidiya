@@ -16,15 +16,15 @@ export class ToDoListService {
       return this.http.get<ToDoListType[]>(this.baseUrl);
     }
 
-    public getById(id: number): Observable<ToDoListType> {
+    public getById(id: string): Observable<ToDoListType> {
       return this.http.get<ToDoListType>(`${this.baseUrl}/${id}`);
     }
 
-    public update(id: number, partial: Partial<ToDoListType>): Observable<ToDoListType> {
+    public update(id: string, partial: Partial<ToDoListType>): Observable<ToDoListType> {
       return this.http.patch<ToDoListType>(`${this.baseUrl}/${id}`, partial);
     }
 
-    public delete(id: number): Observable<void> {
+    public delete(id: string): Observable<void> {
       return this.http.delete<void>(`${this.baseUrl}/${id}`);
     }
 

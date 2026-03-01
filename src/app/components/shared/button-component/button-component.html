@@ -1,5 +1,5 @@
 <button
-    type="button"
+    type="{{ submit() ? 'submit' : 'button' }}"
     class="
       button button-type--{{ type() }}
       button-size--{{ size() }}
