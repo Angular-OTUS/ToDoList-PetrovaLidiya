@@ -14,33 +14,37 @@
                 (keydown.escape)="cancelEdit()"
             />
             <app-button-component
-                [title]="'Сохранить'"
                 [type]="'accent'"
                 [size]="'small'"
                 (buttonClick)="saveNewTitle()"
                 appTooltip="Сохранить изменения в названии задачи"
-            ></app-button-component>
+            >Сохранить</app-button-component>
         </div>
     } @else {
-        <div
-            class="title"
-            role="button"
-            tabindex="0"
-            (click)="selectItem.emit(item().id)"
-            (dblclick)="setEditingMode()"
-            (keydown.enter)="selectItem.emit(item().id)"
-            appTooltip="Показать описание задачи"
-        >
-            {{ item().title }}
+        <div class="d-flex title-block align-items-center">
+            <mat-checkbox
+                [checked]="isCompleted()"
+                (change)="onChange($event)"
+            ></mat-checkbox>
+            <div
+                class="title"
+                role="button"
+                tabindex="0"
+                (click)="selectItem.emit(item().id)"
+                (dblclick)="setEditingMode()"
+                (keydown.enter)="selectItem.emit(item().id)"
+                appTooltip="Показать описание задачи"
+            >
+                {{ item().title }}
+            </div>
         </div>
         <div class="p-16">
             <app-button-component
-                [title]="'Удалить'"
                 [type]="'danger'"
                 [size]="'small'"
                 (buttonClick)="delete.emit()"
                 appTooltip="Удалить задачу из списка"
-            ></app-button-component>
+            >Удалить</app-button-component>
         </div>
     }
 </li>

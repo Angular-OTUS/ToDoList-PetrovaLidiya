@@ -1,9 +1,11 @@
 <button
-    type="button"
+    type="{{ submit() ? 'submit' : 'button' }}"
     class="
       button button-type--{{ type() }}
       button-size--{{ size() }}
     "
     (click)="buttonClick.emit()"
     [disabled]="disabled()"
->{{ title() }}</button>
+>
+  <ng-content></ng-content>
+</button>

@@ -8,9 +8,9 @@ import { NButtonSize, NButtonType } from '../../../interfaces';
   styleUrl: './button-component.scss',
 })
 export class ButtonComponent {
-  public readonly title = input.required<string>();
   public readonly disabled = input<boolean | null>(null);
   public readonly type = input<NButtonType>('accent');
   public readonly size = input<NButtonSize>('default');
   public readonly buttonClick = output<void>();
+  public readonly submit = input<boolean>(false);
 }

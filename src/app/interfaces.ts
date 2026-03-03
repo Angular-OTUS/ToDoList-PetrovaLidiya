@@ -1,7 +1,8 @@
 export interface ToDoListType {
-  id: number;
+  id: string;
   title: string;
   description?: string;
+  status: 'InProgress' | 'Completed';
 }
 
 export type NButtonType = 'accent' | 'basic' | 'danger';
