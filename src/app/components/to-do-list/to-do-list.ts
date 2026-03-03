@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ToDoListItemComponent } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
 import { ToDoListService } from '../../services/ToDoListService.service';
@@ -66,7 +66,6 @@ export class ToDoListComponent implements OnInit{
   }
 
   public delete(id: string): void {
-  public delete(id: string): void {
     if (!id) return;
 
     this._toDoListService.delete(id)
@@ -79,7 +78,6 @@ export class ToDoListComponent implements OnInit{
       });
   }
 
-  public updateItem(id: string, title: string): void {
   public updateItem(id: string, title: string): void {
     this._toDoListService.update(id, {title: title})
       .pipe(takeUntilDestroyed(this._destroyRef))
