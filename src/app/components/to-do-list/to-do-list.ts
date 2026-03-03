@@ -9,6 +9,8 @@ import { ToDoListType } from '../../interfaces';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterOutlet } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
@@ -50,12 +52,20 @@ export class ToDoListComponent implements OnInit{
   private readonly _router = inject(Router);
   
   public ngOnInit(): void {
-    this._toDoListService.getAll().subscribe(x => {
+    this._toDoListService.getAll()
+    .pipe(
+      catchError((error: HttpErrorResponse) => { 
+        this._toastService.show('Сервис временно недоступен. Попробуйте позже.', 'error'); 
+        return throwError(error);
+      }),
+    )
+    .subscribe(x => {
       this.toDoList = x;
       this.isLoading.set(false);
     });
   }
 
+  public delete(id: string): void {
   public delete(id: string): void {
     if (!id) return;
 
@@ -69,6 +79,7 @@ export class ToDoListComponent implements OnInit{
       });
   }
 
+  public updateItem(id: string, title: string): void {
   public updateItem(id: string, title: string): void {
     this._toDoListService.update(id, {title: title})
       .pipe(takeUntilDestroyed(this._destroyRef))
@@ -92,7 +103,7 @@ export class ToDoListComponent implements OnInit{
   public changeItemStatus(item: ToDoListType, isCompleted: boolean): void {
     const updatedItem = item;
     updatedItem.status = isCompleted ? 'Completed' : 'InProgress';
-    this._toDoListService.update(updatedItem.id, updatedItem)
+    this._toDoListService.update(updatedItem.id, {status: updatedItem.status})
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(x => {
         this._toastService.show('Статус задачи изменен', 'success');

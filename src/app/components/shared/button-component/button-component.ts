@@ -12,4 +12,5 @@ export class ButtonComponent {
   public readonly type = input<NButtonType>('accent');
   public readonly size = input<NButtonSize>('default');
   public readonly buttonClick = output<void>();
+  public readonly submit = input<boolean>(false);
 }
