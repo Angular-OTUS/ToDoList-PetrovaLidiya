@@ -42,10 +42,20 @@
         }
     </div>
     <div class="text">
-        @if (description()) {
-            {{ description() }}
+        @if (isEditing()) {
+             <textarea
+                matInput 
+                name="description"
+                class="textarea"
+                placeholder="Введите описание задачи"
+                [(ngModel)]="editingDescr"
+            ></textarea>
         } @else {
-            <i>Описание не указано</i>
+            @if (description()) {
+                {{ description() }}
+            } @else {
+                <i>Описание не указано</i>
+            }
         }
     </div>
 </div>

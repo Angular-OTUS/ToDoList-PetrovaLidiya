@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { ToDoListType } from '../../interfaces';
 import { TooltipDirective } from '../../directives/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,21 +12,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './to-do-list-item.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToDoListItemComponent implements OnInit {
+export class ToDoListItemComponent {
   public readonly item = input.required<ToDoListType>();
-  public taskId = signal<string>('');
+  public taskId = input.required<string>();
 
   public isCompleted = computed(() => this.item().status === 'Completed');
 
   private readonly _router = inject(Router);
 
   private readonly _ar = inject(ActivatedRoute);
-
-  public ngOnInit(): void {    
-    this._ar.params.subscribe(params => {
-      this.taskId.set(params['id']);
-    });
-  }
 
   public selectItem(): void {
     this._router.navigate(['/tasks', this.item().id]);

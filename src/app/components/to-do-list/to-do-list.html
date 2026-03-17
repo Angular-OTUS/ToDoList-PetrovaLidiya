@@ -20,6 +20,7 @@
                         @if (item.status === selectedStatusFilter() || !selectedStatusFilter()){
                             <app-to-do-list-item
                                 [item]="item"
+                                [taskId]="taskId()"
                             ></app-to-do-list-item>
                         }
                     }

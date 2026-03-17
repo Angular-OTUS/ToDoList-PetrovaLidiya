@@ -32,6 +32,8 @@ export class ToDoItemViewComponent implements OnInit{
 
   public editingTitle = '';
 
+  public editingDescr = '';
+
   private readonly _toDoListService = inject(ToDoListService);
 
   private readonly _ar = inject(ActivatedRoute);
@@ -68,23 +70,26 @@ export class ToDoItemViewComponent implements OnInit{
 
   public cancelEdit(): void {
     this.editingTitle = '';
+    this.editingDescr = '';
     this.isEditing.set(false);
   }
 
   public setEditingMode(): void {
     this.isEditing.set(true);
     this.editingTitle = this.title();
+    this.editingDescr = this.description();
   }
 
   public saveNewTitle(): void {
     this.editingTitle = this.editingTitle.trim();
     if (!this.editingTitle)
       return;
-    this._toDoListService.update(this.taskId(), {title: this.editingTitle})
+    this._toDoListService.update(this.taskId(), {title: this.editingTitle, description: this.editingDescr})
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(x => {
         this._toastService.show('Задача обнавлена', 'success');
         this.title.set(x.title);
+        this.description.set(x.description!);
         this.isEditing.set(false);
       });    
   }

@@ -35,6 +35,8 @@ export class ToDoListComponent implements OnInit{
 
   public isLoading = signal<boolean>(true);
 
+  public taskId = signal<string>('');
+
   public selectedStatusFilter = signal<'InProgress' | 'Completed' | null>(null);
 
   private _toDoListService = inject(ToDoListService);
@@ -43,11 +45,17 @@ export class ToDoListComponent implements OnInit{
 
   private _destroyRef = inject(DestroyRef);
 
+  private readonly _ar = inject(ActivatedRoute);
+
   private _cdr = inject(ChangeDetectorRef);
 
   private readonly _router = inject(Router);
   
   public ngOnInit(): void {
+    this._ar.paramMap.subscribe(params => {
+      this.taskId.set(params.get('id')!);
+    });
+    
     this._toDoListService.getAll()
     .pipe(
       catchError((error: HttpErrorResponse) => { 
