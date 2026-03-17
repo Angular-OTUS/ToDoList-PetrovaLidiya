@@ -20,11 +20,6 @@
                         @if (item.status === selectedStatusFilter() || !selectedStatusFilter()){
                             <app-to-do-list-item
                                 [item]="item"
-                                [selectedId]="selectedItemId()"
-                                (delete)="delete(item.id)"
-                                (selectItem)="selectItem($event)"
-                                (save)="updateItem(item.id, $event)"
-                                (changeStatus)="changeItemStatus(item, $event)"
                             ></app-to-do-list-item>
                         }
                     }

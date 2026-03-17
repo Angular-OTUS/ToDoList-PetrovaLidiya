@@ -21,6 +21,9 @@ body {
 .d-flex {
   display: flex;
 }
+.justify-space-between {
+  justify-content: space-between;
+}
 .gap-24 {
   gap: 24px;
 }
@@ -30,11 +33,20 @@ body {
 .m-b-16 {
   margin-bottom: 16px;
 }
+.m-b-24 {
+  margin-bottom: 24px;
+}
 .p-16 {
   padding: 16px;
 }
+.p-t-8 {
+  padding-top: 8px;
+}
 .align-items-center {
   align-items: center;
+}
+.align-items-start {
+  align-items: start;
 }
 .w-100 {
   width: 100%;

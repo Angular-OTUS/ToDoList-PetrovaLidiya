@@ -1,50 +1,20 @@
 <li 
     class="todolist-item"
-    [class.selected]="item().id === selectedId()"
->
-    @if (isEditing()) {
-        <div class="form-row p-16 d-flex gap-16 align-items-center w-100">
-            <input
-                matInput
-                class="input-text"
-                type="text"
-                placeholder="Введите новое название задачи"
-                [(ngModel)]="editingTitle"
-                (keydown.enter)="saveNewTitle()"
-                (keydown.escape)="cancelEdit()"
-            />
-            <app-button-component
-                [type]="'accent'"
-                [size]="'small'"
-                (buttonClick)="saveNewTitle()"
-                appTooltip="Сохранить изменения в названии задачи"
-            >Сохранить</app-button-component>
+    [class.selected]="item().id === taskId()"
+>    
+    <div class="d-flex title-block align-items-center">
+        @if (isCompleted()) {
+            <div>+ </div>
+        }         
+        <div
+            class="title"
+            role="button"
+            tabindex="0"
+            (click)="selectItem()"
+            (keydown.enter)="selectItem()"
+            appTooltip="Показать описание задачи"
+        >
+            {{ item().title }}
         </div>
-    } @else {
-        <div class="d-flex title-block align-items-center">
-            <mat-checkbox
-                [checked]="isCompleted()"
-                (change)="onChange($event)"
-            ></mat-checkbox>
-            <div
-                class="title"
-                role="button"
-                tabindex="0"
-                (click)="selectItem.emit(item().id)"
-                (dblclick)="setEditingMode()"
-                (keydown.enter)="selectItem.emit(item().id)"
-                appTooltip="Показать описание задачи"
-            >
-                {{ item().title }}
-            </div>
-        </div>
-        <div class="p-16">
-            <app-button-component
-                [type]="'danger'"
-                [size]="'small'"
-                (buttonClick)="delete.emit()"
-                appTooltip="Удалить задачу из списка"
-            >Удалить</app-button-component>
-        </div>
-    }
+    </div>
 </li>
