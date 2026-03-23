@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ToDoListItemComponent {
   public readonly item = input.required<ToDoListType>();
-  public taskId = input.required<string>();
+  public taskId = input.required<string | null>();
 
   public isCompleted = computed(() => this.item().status === 'Completed');
 
