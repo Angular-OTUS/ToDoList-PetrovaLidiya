@@ -1,18 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
-import { ButtonComponent } from '../shared/button-component/button-component';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { ToDoListType } from '../../interfaces';
 import { TooltipDirective } from '../../directives/tooltip';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-to-do-list-item',
   imports: [
-    MatInputModule,
-    MatCheckboxModule,
-    FormsModule,
-    ButtonComponent,
     TooltipDirective,
 ],
   templateUrl: './to-do-list-item.html',
@@ -21,36 +14,16 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class ToDoListItemComponent {
   public readonly item = input.required<ToDoListType>();
-  public selectedId = input<string | null>();
-  public readonly selectItem = output<string>();
-  public readonly delete = output<void>();
-  public readonly save = output<string>();
-  public readonly changeStatus = output<boolean>();
+  public taskId = input.required<string | null>();
 
-  public editingTitle = '';
-  public isEditing = signal<boolean>(false);
   public isCompleted = computed(() => this.item().status === 'Completed');
 
-  public saveNewTitle(): void {
-    this.editingTitle = this.editingTitle.trim();
-    if (!this.editingTitle)
-      return;
-    this.save.emit(this.editingTitle);
-    this.isEditing.set(false);
+  private readonly _router = inject(Router);
+
+  private readonly _ar = inject(ActivatedRoute);
+
+  public selectItem(): void {
+    this._router.navigate(['/tasks', this.item().id]);
   }
 
-  public cancelEdit(): void {
-    this.editingTitle = '';
-    this.isEditing.set(false);
-  }
-
-  public setEditingMode(): void {
-    this.isEditing.set(true);
-    this.editingTitle = this.item().title;
-  }
-
-  public onChange(event: any): void {
-    this.changeStatus.emit(event.checked);
-  }
-  
 }
