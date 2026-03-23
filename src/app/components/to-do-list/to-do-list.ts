@@ -9,9 +9,9 @@ import { ToDoListType } from '../../interfaces';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, throwError } from 'rxjs';
+import { catchError, filter, startWith, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -35,7 +35,7 @@ export class ToDoListComponent implements OnInit{
 
   public isLoading = signal<boolean>(true);
 
-  public taskId = signal<string>('');
+  public taskId = signal<string | null>('');
 
   public selectedStatusFilter = signal<'InProgress' | 'Completed' | null>(null);
 
@@ -52,9 +52,16 @@ export class ToDoListComponent implements OnInit{
   private readonly _router = inject(Router);
   
   public ngOnInit(): void {
-    this._ar.paramMap.subscribe(params => {
-      this.taskId.set(params.get('id')!);
-    });
+    this._router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        startWith(null),
+        takeUntilDestroyed(this._destroyRef),
+      )
+      .subscribe(() => {
+        const id = this._ar.firstChild?.snapshot.paramMap.get('id') ?? null;
+        this.taskId.set(id);
+      });
     
     this._toDoListService.getAll()
     .pipe(
