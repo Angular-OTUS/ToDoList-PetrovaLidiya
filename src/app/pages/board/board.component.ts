@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TaskService } from '../../core/services/task.service';
 import { Task } from '../../shared/models/task.model';
 
@@ -7,14 +7,14 @@ import { Task } from '../../shared/models/task.model';
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css'],
-  imports: [ FormsModule, ],
+  imports: [ CommonModule ],
 })
 export class BoardComponent implements OnInit {
   inProgressTasks: Task[] = [];
   completedTasks: Task[] = [];
   isLoading = false;
 
-  constructor(private taskService: TaskService) {}
+  private taskService = inject(TaskService);
 
   ngOnInit(): void {
     this.loadTasks();
@@ -31,7 +31,7 @@ export class BoardComponent implements OnInit {
       error: (error) => {
         console.error('Error loading tasks:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -40,7 +40,7 @@ export class BoardComponent implements OnInit {
       next: () => {
         this.loadTasks();
       },
-      error: (error) => console.error('Error moving task:', error)
+      error: (error) => console.error('Error moving task:', error),
     });
   }
 }

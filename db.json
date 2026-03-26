@@ -22,7 +22,7 @@
       "id": "4",
       "title": "Написать документацию",
       "description": "Описать функциональность приложения",
-      "status": "Completed"
+      "status": "InProgress"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../core/services/task.service';
 import { Task } from '../../shared/models/task.model';
@@ -7,14 +8,14 @@ import { Task } from '../../shared/models/task.model';
   selector: 'app-backlog',
   templateUrl: './backlog.component.html',
   styleUrls: ['./backlog.component.css'],
-  imports: [ FormsModule, ],
+  imports: [ CommonModule, FormsModule ],
 })
 export class BacklogComponent implements OnInit {
   tasks: Task[] = [];
   selectedTask: Task | null = null;
   isLoading = false;
 
-  constructor(private taskService: TaskService) {}
+  private taskService = inject(TaskService);
 
   ngOnInit(): void {
     this.loadTasks();
@@ -30,7 +31,7 @@ export class BacklogComponent implements OnInit {
       error: (error) => {
         console.error('Error loading tasks:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -46,7 +47,7 @@ export class BacklogComponent implements OnInit {
           this.selectedTask = updatedTask;
           this.loadTasks();
         },
-        error: (error) => console.error('Error updating task:', error)
+        error: (error) => console.error('Error updating task:', error),
       });
     }
   }
@@ -55,12 +56,12 @@ export class BacklogComponent implements OnInit {
     if (this.selectedTask) {
       this.taskService.updateTask(this.selectedTask.id, {
         title: this.selectedTask.title,
-        description: this.selectedTask.description
+        description: this.selectedTask.description,
       }).subscribe({
         next: () => {
           this.loadTasks();
         },
-        error: (error) => console.error('Error saving task:', error)
+        error: (error) => console.error('Error saving task:', error),
       });
     }
   }
