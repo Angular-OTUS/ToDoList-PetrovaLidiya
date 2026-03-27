@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../core/services/task.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Task } from '../../shared/models/task.model';
 
 @Component({
@@ -17,6 +18,8 @@ export class BacklogComponent implements OnInit {
 
   private taskService = inject(TaskService);
 
+  private toastService = inject(ToastService);
+
   ngOnInit(): void {
     this.loadTasks();
   }
@@ -29,7 +32,7 @@ export class BacklogComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading tasks:', error);
+        this.toastService.show('Ошибка при загрузке списка задач', 'error');
         this.isLoading = false;
       },
     });
@@ -45,9 +48,10 @@ export class BacklogComponent implements OnInit {
       this.taskService.updateTask(this.selectedTask.id, { status }).subscribe({
         next: () => {
           this.selectedTask = updatedTask;
+          this.toastService.show('Статус задачи изменен', 'success');
           this.loadTasks();
         },
-        error: (error) => console.error('Error updating task:', error),
+        error: (error) => this.toastService.show('Ошибка при обновлении задачи', 'error'),
       });
     }
   }
@@ -60,8 +64,9 @@ export class BacklogComponent implements OnInit {
       }).subscribe({
         next: () => {
           this.loadTasks();
+          this.toastService.show('Задача успешно изменена', 'success');
         },
-        error: (error) => console.error('Error saving task:', error),
+        error: (error) => this.toastService.show('Ошибка при сохранении задачи', 'error'),
       });
     }
   }

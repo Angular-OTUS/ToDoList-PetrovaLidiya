@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../../core/services/task.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Task } from '../../shared/models/task.model';
 
 @Component({
@@ -16,6 +17,8 @@ export class BoardComponent implements OnInit {
 
   private taskService = inject(TaskService);
 
+  private toastService = inject(ToastService)
+
   ngOnInit(): void {
     this.loadTasks();
   }
@@ -29,7 +32,7 @@ export class BoardComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading tasks:', error);
+        this.toastService.show('Ошибка при загрузке списка задач', 'error');
         this.isLoading = false;
       },
     });
@@ -38,9 +41,10 @@ export class BoardComponent implements OnInit {
   moveTask(task: Task, newStatus: 'InProgress' | 'Completed'): void {
     this.taskService.updateTask(task.id, { status: newStatus }).subscribe({
       next: () => {
+        this.toastService.show('Статус задачи изменен', 'success');
         this.loadTasks();
       },
-      error: (error) => console.error('Error moving task:', error),
+      error: (error) => this.toastService.show('Ошибка при обновлении задачи', 'error'),
     });
   }
 }

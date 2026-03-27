@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ToastsComponent } from './shared/toasts-component/toasts-component';
 
 @Component({
     selector: 'app-root',
@@ -9,6 +10,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         RouterLink,
         RouterLinkActive,
         RouterOutlet,
+        ToastsComponent,
     ],
 })
 export class AppComponent {
