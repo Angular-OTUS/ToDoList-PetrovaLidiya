@@ -10,7 +10,7 @@ describe('App', () => {
         RouterModule.forRoot([]),
         AppComponent,
     ],
-    providers: [provideZonelessChangeDetection()]
+    providers: [provideZonelessChangeDetection()],
 }).compileComponents();
   });
 

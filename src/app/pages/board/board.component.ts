@@ -31,7 +31,7 @@ export class BoardComponent implements OnInit {
         this.completedTasks = tasks.filter(t => t.status === 'Completed');
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.toastService.show('Ошибка при загрузке списка задач', 'error');
         this.isLoading = false;
       },
@@ -44,7 +44,7 @@ export class BoardComponent implements OnInit {
         this.toastService.show('Статус задачи изменен', 'success');
         this.loadTasks();
       },
-      error: (error) => this.toastService.show('Ошибка при обновлении задачи', 'error'),
+      error: () => this.toastService.show('Ошибка при обновлении задачи', 'error'),
     });
   }
 }

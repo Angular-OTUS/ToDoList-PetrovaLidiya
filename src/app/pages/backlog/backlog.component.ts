@@ -31,7 +31,7 @@ export class BacklogComponent implements OnInit {
         this.tasks = tasks;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.toastService.show('Ошибка при загрузке списка задач', 'error');
         this.isLoading = false;
       },
@@ -51,7 +51,7 @@ export class BacklogComponent implements OnInit {
           this.toastService.show('Статус задачи изменен', 'success');
           this.loadTasks();
         },
-        error: (error) => this.toastService.show('Ошибка при обновлении задачи', 'error'),
+        error: () => this.toastService.show('Ошибка при обновлении задачи', 'error'),
       });
     }
   }
@@ -66,7 +66,7 @@ export class BacklogComponent implements OnInit {
           this.loadTasks();
           this.toastService.show('Задача успешно изменена', 'success');
         },
-        error: (error) => this.toastService.show('Ошибка при сохранении задачи', 'error'),
+        error: () => this.toastService.show('Ошибка при сохранении задачи', 'error'),
       });
     }
   }
