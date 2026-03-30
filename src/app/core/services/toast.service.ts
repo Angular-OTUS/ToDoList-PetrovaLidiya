@@ -1,20 +1,35 @@
-import { Injectable, signal } from '@angular/core';
-import { Toast } from '../interfaces';
+import { Injectable } from '@angular/core';
+import { Toast, ToastType } from '../interfaces';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  toasts = signal<Toast[]>([]);
+  private toastsSubject = new BehaviorSubject<Toast[]>([]);
+  
+  public toasts$: Observable<Toast[]> = this.toastsSubject.asObservable();
 
-  show(message: string, type: 'success' | 'error' | 'info' = 'info') {
+  public get currentToasts(): Toast[] {
+    return this.toastsSubject.getValue();
+  }
+
+  show(message: string, type: ToastType) {
     const id = Date.now();
-    this.toasts.update((toasts) => [...toasts, { id, message, type }]);
+    const toast: Toast = {
+      id: id,
+      type,
+      message,
+    };
+    const currentToasts = this.currentToasts;
+
+    this.toastsSubject.next([...currentToasts, toast]);
     
     setTimeout(() => this.remove(id), 3000);
   }
 
   remove(id: number) {
-    this.toasts.update((toasts) => toasts.filter((t) => t.id !== id));
+    const filteredToast = this.currentToasts.filter(toast => toast.id !== id);
+    this.toastsSubject.next(filteredToast);
   }
 }

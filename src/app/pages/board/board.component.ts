@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../../core/services/task.service';
-import { ToastService } from '../../core/services/toast.service';
 import { Task } from '../../shared/models/task.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -10,41 +10,39 @@ import { Task } from '../../shared/models/task.model';
   styleUrls: ['./board.component.css'],
   imports: [ CommonModule ],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   inProgressTasks: Task[] = [];
   completedTasks: Task[] = [];
   isLoading = false;
 
   private taskService = inject(TaskService);
 
-  private toastService = inject(ToastService)
+  private subscriptions = new Subscription();
 
   ngOnInit(): void {
-    this.loadTasks();
-  }
-
-  loadTasks(): void {
-    this.isLoading = true;
-    this.taskService.getTasks().subscribe({
-      next: (tasks) => {
+    this.subscriptions.add(
+      this.taskService.tasks$.subscribe(tasks => {
         this.inProgressTasks = tasks.filter(t => t.status === 'InProgress');
         this.completedTasks = tasks.filter(t => t.status === 'Completed');
-        this.isLoading = false;
-      },
-      error: () => {
-        this.toastService.show('Ошибка при загрузке списка задач', 'error');
-        this.isLoading = false;
-      },
-    });
+      }),
+    );
+
+    this.subscriptions.add(
+      this.taskService.loading$.subscribe(loading => {
+        this.isLoading = loading;
+      }),
+    );
+
+    if (this.taskService.currentTasks.length === 0) {
+      this.taskService.getTasks().subscribe();
+    }
+  }
+  
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
-  moveTask(task: Task, newStatus: 'InProgress' | 'Completed'): void {
-    this.taskService.updateTask(task.id, { status: newStatus }).subscribe({
-      next: () => {
-        this.toastService.show('Статус задачи изменен', 'success');
-        this.loadTasks();
-      },
-      error: () => this.toastService.show('Ошибка при обновлении задачи', 'error'),
-    });
+  moveTask(taskId: string, newStatus: 'InProgress' | 'Completed'): void {
+    this.taskService.updateTaskStatus(taskId, newStatus).subscribe();
   }
 }

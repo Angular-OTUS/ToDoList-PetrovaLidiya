@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../core/services/task.service';
-import { ToastService } from '../../core/services/toast.service';
 import { Task } from '../../shared/models/task.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-backlog',
@@ -11,48 +11,48 @@ import { Task } from '../../shared/models/task.model';
   styleUrls: ['./backlog.component.css'],
   imports: [ CommonModule, FormsModule ],
 })
-export class BacklogComponent implements OnInit {
+export class BacklogComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   selectedTask: Task | null = null;
   isLoading = false;
 
   private taskService = inject(TaskService);
 
-  private toastService = inject(ToastService);
+  private subscriptions = new Subscription();
 
   ngOnInit(): void {
-    this.loadTasks();
+    this.subscriptions.add(
+      this.taskService.tasks$.subscribe(tasks => {
+        this.tasks = tasks;
+      }),
+    );
+
+    this.subscriptions.add(
+      this.taskService.selectedTaskId$.subscribe(() => {
+        this.selectedTask = this.taskService.selectedTask;
+      }),
+    );
+
+    this.subscriptions.add(
+      this.taskService.loading$.subscribe(loading => {
+        this.isLoading = loading;
+      }),
+    );
+
+    this.taskService.getTasks().subscribe();
   }
 
-  loadTasks(): void {
-    this.isLoading = true;
-    this.taskService.getTasks().subscribe({
-      next: (tasks) => {
-        this.tasks = tasks;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.toastService.show('Ошибка при загрузке списка задач', 'error');
-        this.isLoading = false;
-      },
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   selectTask(task: Task): void {
-    this.selectedTask = { ...task };
+    this.taskService.selectTask(task.id);
   }
 
   updateTaskStatus(status: 'InProgress' | 'Completed'): void {
     if (this.selectedTask) {
-      const updatedTask = { ...this.selectedTask, status };
-      this.taskService.updateTask(this.selectedTask.id, { status }).subscribe({
-        next: () => {
-          this.selectedTask = updatedTask;
-          this.toastService.show('Статус задачи изменен', 'success');
-          this.loadTasks();
-        },
-        error: () => this.toastService.show('Ошибка при обновлении задачи', 'error'),
-      });
+      this.taskService.updateTaskStatus(this.selectedTask.id, status).subscribe();
     }
   }
 
@@ -61,13 +61,7 @@ export class BacklogComponent implements OnInit {
       this.taskService.updateTask(this.selectedTask.id, {
         title: this.selectedTask.title,
         description: this.selectedTask.description,
-      }).subscribe({
-        next: () => {
-          this.loadTasks();
-          this.toastService.show('Задача успешно изменена', 'success');
-        },
-        error: () => this.toastService.show('Ошибка при сохранении задачи', 'error'),
-      });
+      }).subscribe();
     }
   }
 }

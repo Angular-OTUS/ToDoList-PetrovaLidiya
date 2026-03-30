@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, finalize, Observable, tap } from 'rxjs';
 import { Task } from '../../shared/models/task.model';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,55 @@ export class TaskService {
 
   private http = inject(HttpClient);
 
+  private toastService = inject(ToastService);
+
+  private tasksSubject = new BehaviorSubject<Task[]>([]);
+
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+
+  private selectedTaskIdSubject = new BehaviorSubject<string | null>(null);
+
+  public tasks$: Observable<Task[]> = this.tasksSubject.asObservable();
+
+  public loading$: Observable<boolean> = this.loadingSubject.asObservable();
+
+  public selectedTaskId$: Observable<string | null> = this.selectedTaskIdSubject.asObservable();
+
+  public get currentTasks(): Task[] {
+    return this.tasksSubject.getValue();
+  }
+
+  public get isLoading(): boolean {
+    return this.loadingSubject.getValue();
+  }
+
+  public get selectedTaskId(): string | null {
+    return this.selectedTaskIdSubject.getValue();
+  }
+
+  public get selectedTask(): Task | null {
+    const selectedId = this.selectedTaskId;
+    if (!selectedId) return null;
+    return this.currentTasks.find(task => task.id === selectedId) || null;
+  }
+
+  public get inProgressTasks(): Task[] {
+    return this.currentTasks.filter(task => task.status === 'InProgress');
+  }
+  
+  public get completedTasks(): Task[] {
+    return this.currentTasks.filter(task => task.status === 'Completed');
+  }
+
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl);
+    return this.http.get<Task[]>(this.apiUrl).pipe(
+      tap(tasks => {
+        this.tasksSubject.next(tasks);
+      }),
+      finalize(() => {
+        this.loadingSubject.next(false);
+      }),
+    );
   }
 
   getTaskById(id: string): Observable<Task> {
@@ -20,14 +68,70 @@ export class TaskService {
   }
 
   updateTask(id: string, task: Partial<Task>): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}`, task);
+    this.loadingSubject.next(true);
+
+    return this.http.patch<Task>(`${this.apiUrl}/${id}`, task).pipe(
+      tap(updatedTask => {
+        const currentTasks = this.currentTasks;
+        const updatedTasks = currentTasks.map(task => 
+          task.id === updatedTask.id ? updatedTask : task,
+        );
+        this.tasksSubject.next(updatedTasks);
+        this.toastService.show('Задача обновлена', 'success');
+      }),
+      finalize(() => {
+        this.loadingSubject.next(false);
+      }),
+    );
   }
 
   createTask(task: Omit<Task, 'id'>): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, task);
+    this.loadingSubject.next(true);
+
+    return this.http.post<Task>(this.apiUrl, task).pipe(
+      tap(newTask => {
+        const currentTasks = this.currentTasks;
+        this.tasksSubject.next([...currentTasks, newTask]);
+        this.toastService.show('Задача создана', 'success');
+      }),
+      finalize(() => {
+        this.loadingSubject.next(false);
+      }),
+    );
   }
 
   deleteTask(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    this.loadingSubject.next(true);
+
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => {
+        const currentTasks = this.currentTasks;
+        const filteredTasks = currentTasks.filter(task => task.id != id);
+        this.tasksSubject.next(filteredTasks);
+        if (this.selectedTaskId === id) {
+          this.clearSelectedTask();
+        }
+        this.toastService.show('Задача удалена', 'success');
+      }),
+      finalize(() => {
+        this.loadingSubject.next(false);
+      }),
+    );
+  }
+
+  selectTask(taskId: string | null): void {
+    this.selectedTaskIdSubject.next(taskId);
+  }
+
+  clearSelectedTask(): void {
+    this.selectedTaskIdSubject.next(null);
+  }
+
+  updateTaskStatus(id: string, status: 'InProgress' | 'Completed'): Observable<Task> {
+    return this.updateTask(id, { status }).pipe(
+      tap(() => {
+        this.toastService.show('Статус изменен', 'success');
+      }),
+    );
   }
 }

@@ -19,7 +19,7 @@
                     <p>{{ task.description }}</p>
                     <button 
                         class="move-btn"
-                        (click)="moveTask(task, 'Completed')">
+                        (click)="moveTask(task.id, 'Completed')">
                         Move to Completed
                     </button>
                 </div>
@@ -44,7 +44,7 @@
                     <p>{{ task.description }}</p>
                     <button 
                         class="move-btn"
-                        (click)="moveTask(task, 'InProgress')">
+                        (click)="moveTask(task.id, 'InProgress')">
                         Move to In Progress
                     </button>
                 </div>
