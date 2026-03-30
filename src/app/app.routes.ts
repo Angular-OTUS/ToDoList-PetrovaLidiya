@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-import { ToDoListComponent } from './components/to-do-list/to-do-list';
-import { ToDoItemViewComponent } from './components/to-do-item-view/to-do-item-view';
+import { BacklogComponent } from './pages/backlog/backlog.component';
+import { BoardComponent } from './pages/board/board.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'tasks', pathMatch: 'full' },
-    { path: 'tasks', component: ToDoListComponent, children: [ { path: ':id', component: ToDoItemViewComponent }] },
-    { path: '**', redirectTo: 'tasks' },
+  { path: 'backlog', component: BacklogComponent },
+  { path: 'board', component: BoardComponent },
+  { path: '', redirectTo: '/backlog', pathMatch: 'full' },
+  { path: '**', redirectTo: '/backlog' },
 ];

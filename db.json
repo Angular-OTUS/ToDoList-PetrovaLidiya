@@ -1,0 +1,29 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Создать макет приложения",
+      "description": "Разработать дизайн для Backlog и Board разделов",
+      "status": "InProgress"
+    },
+    {
+      "id": "2",
+      "title": "Настроить роутинг",
+      "description": "Настроить глобальные роуты для Backlog и Board",
+      "status": "Completed"
+    },
+    {
+      "id": "3",
+      "title": "Реализовать JSON-Server",
+      "description": "Создать и настроить фейковое API",
+      "status": "InProgress"
+    },
+    {
+      "id": "4",
+      "title": "Написать документацию",
+      "description": "Описать функциональность приложения",
+      "status": "InProgress"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

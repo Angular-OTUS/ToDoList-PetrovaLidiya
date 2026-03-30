@@ -1,0 +1,80 @@
+<div class="backlog-container">
+  <div class="tasks-list">
+    <h2>Список задач</h2>
+    @if (isLoading) {
+      <div class="loading">
+        Загрузка...
+      </div>
+    } @else {
+      @if (tasks.length === 0) {
+        <div class="empty">
+          Нет задач
+        </div>
+      } @else {
+        <div class="task-items">
+          @for (task of tasks; track task.id) {
+            <div 
+              class="task-item"
+              [class.selected]="selectedTask?.id === task.id"
+              tabindex="0"
+              (keydown.enter)="selectTask(task)"
+              (click)="selectTask(task)">
+              <h3>{{ task.title }}</h3>
+              <span class="status-badge" [class]="task.status.toLowerCase()">
+                {{ task.status }}
+              </span>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  @if (selectedTask) {
+    <div class="task-details">
+      <h2>Детали задачи</h2>
+      <div class="form-group">
+        <label for="name">Название:</label>
+        <input
+          id="name"
+          type="text" 
+          [(ngModel)]="selectedTask.title"
+          (blur)="saveTask()">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Описание:</label>
+        <textarea 
+          id="description"
+          [(ngModel)]="selectedTask.description"
+          (blur)="saveTask()"
+          rows="4">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Статус:</label>
+        <div class="status-buttons">
+          <button 
+            id="status"
+            class="status-btn"
+            [class.active]="selectedTask.status === 'InProgress'"
+            (click)="updateTaskStatus('InProgress')">
+            In Progress
+          </button>
+          <button 
+            class="status-btn"
+            [class.active]="selectedTask.status === 'Completed'"
+            (click)="updateTaskStatus('Completed')">
+            Completed
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="task-details empty-state">
+      <h2>Детали задачи</h2>
+      <p>Выберите задачу для просмотра деталей</p>
+    </div>
+  }
+</div>
