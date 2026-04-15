@@ -1,5 +1,5 @@
 <div class="toast-container">
-    @for (toast of toasts; track toast.id) {
+    @for (toast of toasts$ | async; track toast.id) {
     <div class="toast-item" [ngClass]="toast.type">
         {{ toast.message }}
         <button class="btn-close" (click)="closeToast(toast.id)">

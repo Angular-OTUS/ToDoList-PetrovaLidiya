@@ -1,7 +1,7 @@
 <div class="board-container">
   <h1>Task Board</h1>
   
-  @if (isLoading) {
+  @if (loading$ | async) {
     <div class="loading">
         Загрузка задач...
     </div>
@@ -10,10 +10,10 @@
         <div class="column">
         <div class="column-header">
             <h2>In Progress</h2>
-            <span class="task-count">{{ inProgressTasks.length }}</span>
+            <span class="task-count">{{ (inProgressTasks$ | async)?.length }}</span>
         </div>
         <div class="task-list">
-            @for (task of inProgressTasks; track task.id) {
+            @for (task of inProgressTasks$ | async; track task.id) {
                 <div class="task-card">
                     <h3>{{ task.title }}</h3>
                     <p>{{ task.description }}</p>
@@ -24,7 +24,7 @@
                     </button>
                 </div>
             }
-            @if (inProgressTasks.length === 0) {
+            @if ((inProgressTasks$ | async)?.length === 0) {
                 <div class="empty-column">
                     Нет задач в работе
                 </div>
@@ -35,10 +35,10 @@
         <div class="column">
         <div class="column-header">
             <h2>Completed</h2>
-            <span class="task-count">{{ completedTasks.length }}</span>
+            <span class="task-count">{{ (completedTasks$ | async)?.length }}</span>
         </div>
         <div class="task-list">
-            @for (task of completedTasks; track task.id) {
+            @for (task of completedTasks$ | async; track task.id) {
                 <div class="task-card completed">
                     <h3>{{ task.title }}</h3>
                     <p>{{ task.description }}</p>
@@ -49,7 +49,7 @@
                     </button>
                 </div>
             }
-            @if (completedTasks.length === 0) {
+            @if ((completedTasks$ | async)?.length === 0) {
                 <div class="empty-column">
                 Нет завершенных задач
                 </div>

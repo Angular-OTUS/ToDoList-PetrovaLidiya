@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, finalize, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, Observable, tap, throwError } from 'rxjs';
 import { Task } from '../../shared/models/task.model';
 import { ToastService } from './toast.service';
 
@@ -16,22 +16,18 @@ export class TaskService {
 
   private tasksSubject = new BehaviorSubject<Task[]>([]);
 
-  private loadingSubject = new BehaviorSubject<boolean>(false);
+  private loading = new BehaviorSubject<boolean>(false);
 
   private selectedTaskIdSubject = new BehaviorSubject<string | null>(null);
 
   public tasks$: Observable<Task[]> = this.tasksSubject.asObservable();
 
-  public loading$: Observable<boolean> = this.loadingSubject.asObservable();
+  public loading$: Observable<boolean> = this.loading.asObservable();
 
   public selectedTaskId$: Observable<string | null> = this.selectedTaskIdSubject.asObservable();
 
   public get currentTasks(): Task[] {
     return this.tasksSubject.getValue();
-  }
-
-  public get isLoading(): boolean {
-    return this.loadingSubject.getValue();
   }
 
   public get selectedTaskId(): string | null {
@@ -44,31 +40,34 @@ export class TaskService {
     return this.currentTasks.find(task => task.id === selectedId) || null;
   }
 
-  public get inProgressTasks(): Task[] {
-    return this.currentTasks.filter(task => task.status === 'InProgress');
-  }
-  
-  public get completedTasks(): Task[] {
-    return this.currentTasks.filter(task => task.status === 'Completed');
-  }
-
   getTasks(): Observable<Task[]> {
+    this.loading.next(true);
+
     return this.http.get<Task[]>(this.apiUrl).pipe(
       tap(tasks => {
         this.tasksSubject.next(tasks);
       }),
+      catchError(error => {
+        const errorMessage = 'Ошибка при загрузке задач: ' + error.message;
+        return throwError(() => new Error(errorMessage));
+      }),
       finalize(() => {
-        this.loadingSubject.next(false);
+        this.loading.next(false);
       }),
     );
   }
 
   getTaskById(id: string): Observable<Task> {
-    return this.http.get<Task>(`${this.apiUrl}/${id}`);
+    return this.http.get<Task>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        const errorMessage = 'Ошибка при загрузке задачи: ' + error.message;
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 
-  updateTask(id: string, task: Partial<Task>): Observable<Task> {
-    this.loadingSubject.next(true);
+  updateTask(id: string, task: Partial<Task>, isNeedToast = true): Observable<Task> {
+    this.loading.next(true);
 
     return this.http.patch<Task>(`${this.apiUrl}/${id}`, task).pipe(
       tap(updatedTask => {
@@ -77,16 +76,21 @@ export class TaskService {
           task.id === updatedTask.id ? updatedTask : task,
         );
         this.tasksSubject.next(updatedTasks);
-        this.toastService.show('Задача обновлена', 'success');
+        if (isNeedToast)
+          this.toastService.show('Задача обновлена', 'success');
+      }),
+      catchError(error => {
+        const errorMessage = 'Ошибка при обновлении задачи: ' + error.message;
+        return throwError(() => new Error(errorMessage));
       }),
       finalize(() => {
-        this.loadingSubject.next(false);
+        this.loading.next(false);
       }),
     );
   }
 
   createTask(task: Omit<Task, 'id'>): Observable<Task> {
-    this.loadingSubject.next(true);
+    this.loading.next(true);
 
     return this.http.post<Task>(this.apiUrl, task).pipe(
       tap(newTask => {
@@ -94,27 +98,35 @@ export class TaskService {
         this.tasksSubject.next([...currentTasks, newTask]);
         this.toastService.show('Задача создана', 'success');
       }),
+      catchError(error => {
+        const errorMessage = 'Ошибка при создании задачи: ' + error.message;
+        return throwError(() => new Error(errorMessage));
+      }),
       finalize(() => {
-        this.loadingSubject.next(false);
+        this.loading.next(false);
       }),
     );
   }
 
   deleteTask(id: string): Observable<void> {
-    this.loadingSubject.next(true);
+    this.loading.next(true);
 
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => {
         const currentTasks = this.currentTasks;
-        const filteredTasks = currentTasks.filter(task => task.id != id);
+        const filteredTasks = currentTasks.filter(task => task.id !== id);
         this.tasksSubject.next(filteredTasks);
         if (this.selectedTaskId === id) {
           this.clearSelectedTask();
         }
         this.toastService.show('Задача удалена', 'success');
       }),
+      catchError(error => {
+        const errorMessage = 'Ошибка при удалении задачи: ' + error.message;
+        return throwError(() => new Error(errorMessage));
+      }),
       finalize(() => {
-        this.loadingSubject.next(false);
+        this.loading.next(false);
       }),
     );
   }
@@ -128,7 +140,7 @@ export class TaskService {
   }
 
   updateTaskStatus(id: string, status: 'InProgress' | 'Completed'): Observable<Task> {
-    return this.updateTask(id, { status }).pipe(
+    return this.updateTask(id, { status }, false).pipe(
       tap(() => {
         this.toastService.show('Статус изменен', 'success');
       }),

@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../../core/services/task.service';
 import { Task } from '../../shared/models/task.model';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -10,37 +10,17 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./board.component.css'],
   imports: [ CommonModule ],
 })
-export class BoardComponent implements OnInit, OnDestroy {
-  inProgressTasks: Task[] = [];
-  completedTasks: Task[] = [];
-  isLoading = false;
-
+export class BoardComponent {
   private taskService = inject(TaskService);
+  loading$ = this.taskService.loading$;
+  tasks$ = this.taskService.tasks$;
 
-  private subscriptions = new Subscription();
-
-  ngOnInit(): void {
-    this.subscriptions.add(
-      this.taskService.tasks$.subscribe(tasks => {
-        this.inProgressTasks = tasks.filter(t => t.status === 'InProgress');
-        this.completedTasks = tasks.filter(t => t.status === 'Completed');
-      }),
-    );
-
-    this.subscriptions.add(
-      this.taskService.loading$.subscribe(loading => {
-        this.isLoading = loading;
-      }),
-    );
-
-    if (this.taskService.currentTasks.length === 0) {
-      this.taskService.getTasks().subscribe();
-    }
-  }
-  
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
+  inProgressTasks$ = this.taskService.tasks$.pipe(                                                                                                             
+    map(tasks => tasks.filter(t => t.status === 'InProgress'))
+  );                                                                                                                                                           
+  completedTasks$ = this.taskService.tasks$.pipe(                                                                            
+    map(tasks => tasks.filter(t => t.status === 'Completed'))                                                                                                  
+  );
 
   moveTask(taskId: string, newStatus: 'InProgress' | 'Completed'): void {
     this.taskService.updateTaskStatus(taskId, newStatus).subscribe();
