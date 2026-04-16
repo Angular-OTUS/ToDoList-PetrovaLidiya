@@ -1,0 +1,17 @@
+{
+    "LIST_OF_TASKS": "Список задач",
+    "BACKLOG": "Бэклог",
+    "BOARD": "Доска",
+    "TASK_BOARD": "Доска задач",
+    "IN_PROGRESS": "В процессе",
+    "COMPLETED": "Завершено",
+    "MOVE_TO_COMPLETED": "Переместить в завершённые",
+    "MOVE_TO_IN_PROGRESS": "Переместить в процесс",
+    "TASK_DETAILS": "Детали задачи",
+    "SELECT_TASK_TO_VIEW": "Выберите задачу для просмотра деталей",
+    "TITLE": "Название",
+    "DESCRIPTION": "Описание",
+    "STATUS": "Статус",
+    "NO_TASKS": "Нет задач",
+    "LOADING": "Загрузка..."
+}

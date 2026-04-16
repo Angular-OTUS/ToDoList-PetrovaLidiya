@@ -1,15 +1,28 @@
+<header class="d-flex justify-space-between">
+  <div class="brand">
+    <h1>TasksBoard</h1>
+  </div>
+  <div class="d-flex gap-16">
+    <button
+      [class.active]="enActive()"
+      (click)="switchLanguage('en')"
+      >English</button>
+    <button 
+      [class.active]="ruActive()"
+      (click)="switchLanguage('ru')"
+      >Русский</button>
+  </div>
+</header>
 <div class="d-flex w-100 h-100">
   <nav class="navbar">
     <div class="nav-container">
-      <div class="nav-brand">
-        <h1>TasksBoard</h1>
-      </div>
+      
       <ul class="nav-menu">
         <li class="nav-item">
-          <a routerLink="/backlog" routerLinkActive="active">Backlog</a>
+          <a routerLink="/backlog" routerLinkActive="active">{{ 'BACKLOG' |  translate }}</a>
         </li>
         <li class="nav-item">
-          <a routerLink="/board" routerLinkActive="active">Board</a>
+          <a routerLink="/board" routerLinkActive="active">{{ 'BOARD' |  translate }}</a>
         </li>
       </ul>
     </div>
