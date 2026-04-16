@@ -1,0 +1,17 @@
+{
+    "LIST_OF_TASKS": "List of tasks",
+    "BACKLOG": "Backlog",
+    "BOARD": "Board",
+    "TASK_BOARD": "Task Board",
+    "IN_PROGRESS": "In Progress",
+    "COMPLETED": "Completed",
+    "MOVE_TO_COMPLETED": "Move to Completed",
+    "MOVE_TO_IN_PROGRESS": "Move to In Progress",
+    "TASK_DETAILS": "Task details",
+    "SELECT_TASK_TO_VIEW": "Select a task to view details",
+    "TITLE": "Title",
+    "DESCRIPTION": "Description",
+    "STATUS": "Status",
+    "NO_TASKS": "No tasks",
+    "LOADING": "Loading..."
+}

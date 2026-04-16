@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../core/services/task.service';
 import { Task } from '../../shared/models/task.model';
 import { Subscription } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-backlog',
   templateUrl: './backlog.component.html',
   styleUrls: ['./backlog.component.css'],
-  imports: [ CommonModule, FormsModule ],
+  imports: [ CommonModule, FormsModule, TranslatePipe ],
 })
 export class BacklogComponent implements OnInit, OnDestroy {
   private taskService = inject(TaskService);
